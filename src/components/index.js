@@ -16,13 +16,13 @@ const profileDescription = document.querySelector('.profile__description');
 const buttonEditProfile = document.querySelector('.profile__edit-button');
 const modalEditProfile = document.querySelector('.popup_type_edit');
 
-const formElement = document.forms['edit-profile'];
-const nameInput = formElement.elements.name;
-const jobInput = formElement.elements.description;
+const formEditPofile = document.forms['edit-profile'];
+const namePofileInput = formEditPofile.elements.name;
+const jobPofileInput = formEditPofile.elements.description;
 
 const formNewPlace = document.forms['new-place'];
 const namePlaceInput = formNewPlace.elements['place-name'];
-const linklaceInput = formNewPlace.elements.link;
+const linkPlaceInput = formNewPlace.elements.link;
 
 const buttonAddCard = document.querySelector('.profile__add-button');
 const modalAddCard = document.querySelector('.popup_type_new-card');
@@ -40,10 +40,10 @@ function modalClickFunction(nameCard, linkCard) {
     openModal(modalCard);
 }
 
-function handleFormSubmit(evt) {
+function handleFormPofileSubmit(evt) {
     evt.preventDefault();
-    profileTitle.textContent = nameInput.value;
-    profileDescription.textContent = jobInput.value;
+    profileTitle.textContent = namePofileInput.value;
+    profileDescription.textContent = jobPofileInput.value;
     closeModal(modalEditProfile);
 }
 
@@ -51,7 +51,7 @@ function handleFormNewPlaceSubmit(evt) {
     evt.preventDefault();
     const NewPlaceCard = {
         name: namePlaceInput.value,
-        link: linklaceInput.value
+        link: linkPlaceInput.value
     }
     placesList.prepend(addCard(NewPlaceCard.name, NewPlaceCard.link, cardTemplate, removeCard, modalClickFunction, likeCard));
     closeModal(modalAddCard);
@@ -63,11 +63,18 @@ initialCards.forEach((item) => {
 });
 
 // @todo: Слушатели
-modalWindows.forEach((item) => {item.classList.add('popup_is-animated')});
+modalWindows.forEach((item) => {
+    item.classList.add('popup_is-animated'),
+    item.addEventListener('click', (evt) => {
+        if (evt.target === evt.currentTarget) {
+            closeModal(evt.target);
+        }
+    })
+});
 
 buttonEditProfile.addEventListener('click', () => {
-    nameInput.value = profileTitle.textContent;
-    jobInput.value = profileDescription.textContent;
+    namePofileInput.value = profileTitle.textContent;
+    jobPofileInput.value = profileDescription.textContent;
     openModal(modalEditProfile);
 });
 
@@ -83,5 +90,5 @@ buttonCloseModals.forEach(item => {
     })
 })
 
-formElement.addEventListener('submit', handleFormSubmit);
+formEditPofile.addEventListener('submit', handleFormPofileSubmit);
 formNewPlace.addEventListener('submit', handleFormNewPlaceSubmit);
