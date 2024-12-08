@@ -4,7 +4,6 @@
   background: transparent url('../../../images/edit-icon.svg') center no-repeat;
   background-size: 10px 10px;
   border: 1px solid #fff;
-  grid-area: button;
   align-self: center;
   cursor: pointer;
   -webkit-transition: 0.3s;
