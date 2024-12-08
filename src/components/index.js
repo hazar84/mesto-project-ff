@@ -1,5 +1,5 @@
 import '../pages/index.css';
-import { addCard, likeCard } from './card.js';
+import { createCard, likeCard } from './card.js';
 import { openModal, closeModal } from './modal.js';
 import { enableValidation, clearValidation } from './validation.js';
 import { getUserProfile, updateUserProfile, updateAvatarUserProfile, getInitialCards, addNewCard, deleteCard } from './api.js';
@@ -53,11 +53,11 @@ const validationConfig = {
 
 // @todo: Глобальные переменные
 let myId;
-let deleteId;
+let deleteCardId;
 let deleteCardElement;
 
 // @todo: Функции
-function modalClickFunction(nameCard, linkCard) {
+function openModalCard(nameCard, linkCard) {
     modalCardImage.src = linkCard;
     modalCardImage.alt = nameCard;
     modalCardParagraph.textContent = nameCard;
@@ -76,7 +76,9 @@ function handleFormPofileSubmit(evt) {
         profileDescription.textContent = userData.about;
         closeModal(modalEditProfile);
     })
-    .catch(err => console.log(err))
+    .catch((err) => {
+        console.log(err);
+    })
     .finally(() => {
         button.textContent = 'Сохранить';
     })
@@ -85,47 +87,74 @@ function handleFormPofileSubmit(evt) {
 function handleFormAvatarPofileSubmit(evt) {
     evt.preventDefault();
 
-    updateAvatarUserProfile(avatarPofileInput.value).then(userData => {
+    const button = formNewAvatarProfile.querySelector('.popup__button');
+    button.textContent = 'Сохранение...';
+
+    updateAvatarUserProfile(avatarPofileInput.value)
+    .then(userData => {
         profileImage.style.backgroundImage = `url(${userData.avatar})`;
         closeModal(modalEditAvatarProfile);
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+    .finally(() => {
+        button.textContent = 'Сохранить';
     })
 }
 
 function handleFormNewPlaceSubmit(evt) {
     evt.preventDefault();
 
+    const button = formNewPlace.querySelector('.popup__button');
+    button.textContent = 'Сохранение...';
+
     addNewCard(namePlaceInput.value, linkPlaceInput.value)
     .then(newPlaceData => {
-        placesList.prepend(addCard(newPlaceData, cardTemplate, myId, openDeleteCard, modalClickFunction, likeCard));
+        placesList.prepend(createCard(newPlaceData, cardTemplate, myId, openDeleteCard, openModalCard, likeCard));
         closeModal(modalAddCard);
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+    .finally(() => {
+        button.textContent = 'Сохранить';
     })
 }
 
 function openDeleteCard(id, card) {
     openModal(modalDeleteCard);
-    deleteId = id;
+    deleteCardId = id;
     deleteCardElement = card;
 }
 
 function handleOpenDeleteAccept(evt) {
     evt.preventDefault();
 
-    deleteCard(deleteId).then((data) => {
+    deleteCard(deleteCardId)
+    .then((data) => {
         deleteCardElement.remove();
         closeModal(modalDeleteCard)
+    })
+    .catch((err) => {
+        console.log(err);
     })
 }
 
 // @todo: API
-Promise.all([getUserProfile(), getInitialCards()]).then(([userData, cards]) => {
+Promise.all([getUserProfile(), getInitialCards()])
+.then(([userData, cards]) => {
     profileTitle.textContent = userData.name;
     profileDescription.textContent = userData.about;
     profileImage.style.backgroundImage = `url(${userData.avatar})`;
     myId = userData._id;
 
     cards.forEach((card) => {
-        placesList.append(addCard(card, cardTemplate, myId, openDeleteCard, modalClickFunction, likeCard));
+        placesList.append(createCard(card, cardTemplate, myId, openDeleteCard, openModalCard, likeCard));
     });
+})
+.catch((err) => {
+    console.log(err);
 })
 
 // @todo: Слушатели
