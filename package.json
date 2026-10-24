@@ -44,6 +44,7 @@
     "svgo": "^3.3.5",
     "brace-expansion": "^1.1.16",
     "browserslist": "^4.28.7",
-    "js-yaml": "^4.3.2"
+    "js-yaml": "^4.3.2",
+    "http-proxy-middleware": "^2.0.10"
   }
 }
