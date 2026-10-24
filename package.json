@@ -37,6 +37,7 @@
   "overrides": {
     "webpack-dev-middleware": "^8.3.0",
     "shell-quote": "^1.11.0",
-    "websocket-driver": "^0.7.5"
+    "websocket-driver": "^0.7.5",
+    "proxy-addr": "^2.0.8"
   }
 }
